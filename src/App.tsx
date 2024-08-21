@@ -8,26 +8,18 @@ export default function App() {
       const url = "https://wgg522pwivhvi5gqsn675gth3q0otdja.lambda-url.us-east-1.on.aws/636861"
       const response = await fetch(url)
       const word = await response.text()
+
+      const interval = setInterval(() => {
+        setTyped(typed => typed + word[typed.length])
+        if (typed.length >= word.length) {
+          clearTimeout(interval)
+        }
+      }, 500)
+      return interval
     }
 
-    fetchWord()
+    return () => clearTimeout(fetchWord())
   }, [])
-
-  useEffect(() => {
-    let i = 0;
-    const typingInterval = setInterval(() => {
-      if (i < word.length) {
-        setTyped(prevText => prevText + word.charAt(i));
-        i++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, 500);
-
-    return () => {
-      clearInterval(typingInterval);
-    };
-  }, [word]);
   
   return (
     <main>
